@@ -3,7 +3,7 @@ Program that takes currencies data from www.lb.lt
 
 program can:
 get one day data.
-get one day data for excat currency.
+get one day data for excat currency.\n
 get two diferent days data for excat currency.
 get two diferent days data and compare  difference currency values.
 get array of days, show all daya.
