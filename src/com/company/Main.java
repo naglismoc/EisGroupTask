@@ -1,22 +1,41 @@
 package com.company;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 
 public class Main {
-    public static void main(String[] args)  {
+    public static void main(String[] args) {
         Main m = new Main();
 
-        boolean workWithOneDate=false; //change to true to get one day data.
+        boolean workWithOneDate = false; //change to true to get one day data.
         String startDate = "2018-12-17";
         String endDate = "2018-12-19";
         String currencyCode = "USD";//leave empty if want to see all currencies
-        boolean showAllDataFromTo=false;//shows all days data
+        boolean showAllDataFromTo = false;//shows all days data
 
+
+   //-------------------------------coment all inside to operate manually through variables lines up
+        Scanner myObj = new Scanner(System.in);
+        System.out.println("do you want to get one date data? true/false");
+        workWithOneDate = myObj.nextBoolean();
+
+        System.out.println("enter start date. Format yyyy-mm-dd");
+        String fake = myObj.nextLine();
+        startDate = myObj.nextLine();
+        if (!workWithOneDate) {
+            System.out.println("enter end date. Format yyyy-mm-dd");
+            endDate = myObj.nextLine();
+            System.out.println("do you want to see all data between dates? (true) or you want to see difference between selected dates?(false)");
+            showAllDataFromTo = myObj.nextBoolean();
+            fake = myObj.nextLine();
+        }
+        System.out.println("choose currency (currency code, USD,AUD)");
+        currencyCode = myObj.nextLine();
+//-------------------------------------------
         String dBUrl = "https://www.lb.lt/lt/currency/daylyexport/?csv=1&class=Eu&type=day&date_day=";
 
         LocalDate now = LocalDate.now();
@@ -45,12 +64,13 @@ public class Main {
         if (showAllDataFromTo) {
             dataListsList = m.dataFromToAllIncluded(start, end, dBUrl, workWithOneDate, currencyCode);
             m.printsOutData2(dataListsList);
-        }else {
+        } else {
             dataListsList = m.dataFromToOnly(start, end, dBUrl, currencyCode);
             m.printsOutData(dataListsList);
         }
 
     }
+
     private void printsOutData2(List<List<String>> dataListsList) {
         System.out.println("Valiutos pavadinimas, Valiutos kodas, Santykis, Data.");
         for (List<String> strings : dataListsList) {
@@ -59,6 +79,7 @@ public class Main {
             }
         }
     }
+
     /**
      * prints out data with currency differences
      */
@@ -73,7 +94,7 @@ public class Main {
 
                 System.out.print(list[3] + ":  " + list[0] + ". " + list[2]);
                 if (i > 0) {
-                    System.out.print(". difference: " + (currencyValue.subtract( tmpCurrencyValue)));
+                    System.out.print(". difference: " + (currencyValue.subtract(tmpCurrencyValue)));
                 }
                 System.out.println();
                 tmpCurrencyValue = currencyValue;
@@ -81,7 +102,8 @@ public class Main {
         }
     }
 
-    /**method for currency value to be converted string to number
+    /**
+     * method for currency value to be converted string to number
      *
      * @param list
      * @return currencyValue
@@ -106,7 +128,8 @@ public class Main {
         return currencyValue;
     }
 
-    /**some protections for bad input grouped by return value
+    /**
+     * some protections for bad input grouped by return value
      *
      * @param end
      * @param start
@@ -132,6 +155,7 @@ public class Main {
 
     /**
      * main method that returns list<list<String> of data with all days currencies.
+     *
      * @param start
      * @param end
      * @param dBUrl
