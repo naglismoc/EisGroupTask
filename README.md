@@ -1,4 +1,7 @@
 # EisGroupTask
+
+*********************WRITTEN ON INTELLIJ*******************
+
 Program that takes currencies data from www.lb.lt<br/>
 
 program can:<br/>
