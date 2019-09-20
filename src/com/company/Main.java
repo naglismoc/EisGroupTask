@@ -16,66 +16,96 @@ public class Main {
         String endDate = "2018-12-19";
         String currencyCode = "USD";//leave empty if want to see all currencies
         boolean showAllDataFromTo = false;//shows all days data
-
-
-   //-------------------------------coment all inside to operate manually through variables lines up
+        int value = 7;
         Scanner myObj = new Scanner(System.in);
-        System.out.println("do you want to get one date data? true/false");
-        workWithOneDate = myObj.nextBoolean();
-
-        System.out.println("enter start date. Format yyyy-mm-dd");
-        String fake = myObj.nextLine();
-        startDate = myObj.nextLine();
-        if (!workWithOneDate) {
-            System.out.println("enter end date. Format yyyy-mm-dd");
-            endDate = myObj.nextLine();
-            System.out.println("do you want to see all data between dates? (true) or you want to see difference between selected dates?(false)");
-            showAllDataFromTo = myObj.nextBoolean();
-            fake = myObj.nextLine();
-        }
-        System.out.println("choose currency (currency code, USD,AUD)");
-        currencyCode = myObj.nextLine();
-//-------------------------------------------
+        //String scannerRepare = myObj.nextLine();
         String dBUrl = "https://www.lb.lt/lt/currency/daylyexport/?csv=1&class=Eu&type=day&date_day=";
-
         LocalDate now = LocalDate.now();
         List<List<String>> dataListsList;
+        boolean workWithOneDate2 = workWithOneDate;
         LocalDate start;
         LocalDate end;
+        String scannerRepare;
+        while(value!=10) {
+            System.out.println("----------------------------");
+            switch (value) {
+                case 1:
+                    System.out.println("settings window.");
+                    System.out.println("do you want to get one date data? true/false");
+                    workWithOneDate2 = myObj.nextBoolean();
+                    value = 6;
+                    break;
+                case 2:
+                    System.out.println("do you want to see all data between dates? (true) or you want to see difference between selected dates?(false)");
+                    showAllDataFromTo = myObj.nextBoolean();
+                     scannerRepare = myObj.nextLine();
+                    value = 6;
+                    break;
+                case 3:
+                     scannerRepare = myObj.nextLine();
+                    System.out.println("choose currency (currency code - USD,AUD etc) Enter for Not to choose currency");
+                    currencyCode = myObj.nextLine();
+                    value=6;
+                    break;
+                case 4:
+                    System.out.println("enter start date. Format yyyy-mm-dd");
+                    scannerRepare = myObj.nextLine();
+                    startDate = myObj.nextLine();
+                    if (!workWithOneDate2) {
+                        System.out.println("enter end date. Format yyyy-mm-dd");
+                        endDate = myObj.nextLine();
+                    }
+                    value = 6;
+                    break;
+                case 5:
+                    try {
+                        start = LocalDate.parse(startDate);
+                        end = LocalDate.parse(endDate);
+                    } catch (Exception e) {
+                        System.out.println("Wrong date format or its not a date");
+                        return;
+                    }
+                    if (end.compareTo(now) > 0) {
+                        System.out.println("Chosen end date is in the future. Setting it to current day.");
+                        end = now;
+                    }
+                    workWithOneDate2 = m.setToworkWithOneDay(end, start, now);
 
-        try {
-            start = LocalDate.parse(startDate);
-            end = LocalDate.parse(endDate);
-        } catch (Exception e) {
-            System.out.println("Wrong date format or its not a date");
-            return;
-        }
-        if (end.compareTo(now) > 0) {
-            System.out.println("Chosen end date is in the future. Setting it to current day.");
-            end = now;
-        }
-        workWithOneDate = m.setToworkWithOneDay(end, start, now);
+                    if (end.isBefore(LocalDate.of(2014, 10, 1)) || start.isBefore(LocalDate.of(2014, 10, 1))) {
+                        System.out.println("Data you are trying to access wasnt dated than. Please check the dates");
+                        return;
+                    }
 
-        if (end.isBefore(LocalDate.of(2014, 10, 1)) || start.isBefore(LocalDate.of(2014, 10, 1))) {
-            System.out.println("Data you are trying to access wasnt dated than. Please check the dates");
-            return;
+                    if (showAllDataFromTo) {
+                        dataListsList = m.dataFromToAllIncluded(start, end, dBUrl, workWithOneDate2, currencyCode);
+                        m.printsOutData2(dataListsList);
+                    } else {
+                        dataListsList = m.dataFromToOnly(start, end, dBUrl, currencyCode);
+                        m.printsOutData(dataListsList);
+                    }
+                    workWithOneDate2 = workWithOneDate;
+                    value =6;
+                    break;
+                case 6:
+                    System.out.println("change how many dates to use press 1");
+                    System.out.println("change data range to from-to press 2");
+                    System.out.println("change/disable currency press 3");
+                    System.out.println("change date press 4");
+                    System.out.println("start - press 5");
+                    System.out.println("press 7 to quit");
+                     value = myObj.nextInt();
+                    break;
+                case 7: value=10;
+                break;
+            }
         }
-
-        if (showAllDataFromTo) {
-            dataListsList = m.dataFromToAllIncluded(start, end, dBUrl, workWithOneDate, currencyCode);
-            m.printsOutData2(dataListsList);
-        } else {
-            dataListsList = m.dataFromToOnly(start, end, dBUrl, currencyCode);
-            m.printsOutData(dataListsList);
-        }
-
     }
 
     private void printsOutData2(List<List<String>> dataListsList) {
         System.out.println("Valiutos pavadinimas, Valiutos kodas, Santykis, Data.");
         for (List<String> strings : dataListsList) {
-            for (int c = 0; c < strings.size(); c++) {
-                System.out.println(strings.get(c));
+            for (String string : strings) {
+                System.out.println(string);
             }
         }
     }
