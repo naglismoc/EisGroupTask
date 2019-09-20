@@ -4,6 +4,8 @@
 
 Program that takes currencies data from www.lb.lt<br/>
 
+Program runs on switch loop. **updated**
+
 program can:<br/>
 get one day data.<br/>
 get one day data for excat currency.<br/>
