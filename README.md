@@ -1,7 +1,7 @@
 # EisGroupTask
 
 *********************WRITTEN ON INTELLIJ*******************
-
+make sure to clone, not download as a zip.
 Program that takes currencies data from www.lb.lt<br/>
 
 Program runs on switch loop. **updated**
